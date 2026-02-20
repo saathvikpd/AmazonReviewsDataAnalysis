@@ -35,6 +35,10 @@ def process_reviews(input_meta_filename = False, metadata_fields_to_keep = ['par
     if 'timestamp' in review_fields_to_keep:
         df_reviews['timestamp'] = df_reviews['timestamp'].apply(lambda x: (x.month, x.day, x.year))  #Save timestamp data in terms of month, day, year
     
+    if 'text' in review_fields_to_keep:
+        df_reviews['text_length'] = df_reviews["text"].str.split().str.len()  #Get text length
+        review_fields_to_keep.append('text_length')
+    
     if input_meta_filename and save_meta:
         review_fields_to_keep.append('parent_asin')
 
