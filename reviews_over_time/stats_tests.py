@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import grangercausalitytests
 
-def compute_corr(time, num_reviews, helpful_votes, max_lag = 50):
+def compute_corr(time, num_reviews, helpful_votes, max_lag = 50, category = "All_Beauty"):
     
     df = pd.DataFrame({
         "reviews": num_reviews,
@@ -24,9 +24,11 @@ def compute_corr(time, num_reviews, helpful_votes, max_lag = 50):
     plt.xlabel("Time Lag")
     plt.ylabel("Correlation")
     plt.title("Correlation between num reviews & lagged helpful votes")
-    plt.savefig("plots/corr_plot.png")
+    plt.savefig(f"plots/corr_plot_{category}.png")
 
-    return ax
+    peak_lag = -max(corr_data, key = lambda x: x[1])[0]
+
+    return ax, peak_lag
 
 
 def compute_OLS(time, num_reviews, helpful_votes, lag = 1):
@@ -63,19 +65,21 @@ def compute_granger(time, num_reviews, helpful_votes, num_lag = 1):
     return test_results
 
 
-def run_tests(time, num_reviews, helpful_votes):
+def run_tests(time, num_reviews, helpful_votes, category = "All_Beauty"):
 
     print("Generating correlation plot...")
 
-    compute_corr(time, num_reviews, helpful_votes)
+    plot, peak_lag = compute_corr(time, num_reviews, helpful_votes, category = category)
+
+    print(f"Correlation peaks at lag = {peak_lag}")
 
     print("Computing OLS...")
 
-    model = compute_OLS(time, num_reviews, helpful_votes)
+    model = compute_OLS(time, num_reviews, helpful_votes, lag = peak_lag)
 
     print(model.summary())
 
     print("Running Granger Causality test...")
 
-    test_results = compute_granger(time, num_reviews, helpful_votes)
+    test_results = compute_granger(time, num_reviews, helpful_votes, num_lag = peak_lag)
     
