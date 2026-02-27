@@ -1,0 +1,6 @@
+Category,Correlation,P_Value,Conv_Text,Conv_Img,Mean_Text,Mean_Img,Cond_Mean_Img
+Appliances,0.0613,0.00e+00,18.0%,48.1%,0.77,4.7,9.76
+All_Beauty,0.0909,0.00e+00,25.1%,44.4%,0.77,2.55,5.75
+Handmade_Products,0.0792,0.00e+00,22.2%,39.4%,0.51,1.49,3.79
+Software,0.0006,2.18e-01,42.5%,57.2%,4.92,5.41,9.47
+Magazine_Subscriptions,0.0879,1.04e-08,43.5%,91.7%,5.3,57.75,63.0
