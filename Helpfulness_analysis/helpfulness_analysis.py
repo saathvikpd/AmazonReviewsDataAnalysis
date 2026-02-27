@@ -113,14 +113,17 @@ def compute_extremity_bias(df):
     df: DataFrame with rating and helpful_any columns
 
     Outputs:
-    Tuple of (one_star_rate, five_star_rate)
+    one_star,two_star,three_star,four_star, five_star
     '''
     by_rating = df.groupby("rating")["helpful_any"].mean()
 
     one_star = by_rating.get(1.0, np.nan)
+    two_star = by_rating.get(2.0, np.nan)
+    three_star = by_rating.get(3.0, np.nan)
+    four_star = by_rating.get(4.0, np.nan)
     five_star = by_rating.get(5.0, np.nan)
 
-    return one_star, five_star
+    return one_star,two_star,three_star,four_star, five_star
 
 
 def compute_length_effect(df):
@@ -134,12 +137,17 @@ def compute_length_effect(df):
     '''
     by_length = df.groupby("length_bin", observed=False)["helpful_any"].mean()
 
-    long_400plus = by_length.get("400+", np.nan)
+    
+    ref_0_2 = by_length.get("0-2", np.nan)
+    ref_3_20 = by_length.get("3-19", np.nan)
+    ref_20_50 = by_length.get("20-49", np.nan)
     ref_50_100 = by_length.get("50-99", np.nan)
+    ref_100_200 = by_length.get("100-199", np.nan)
+    ref_200_400 = by_length.get("200-399", np.nan)
+    long_400plus = by_length.get("400+", np.nan)
+    return ref_0_2,ref_3_20,ref_20_50,ref_50_100,ref_100_200,ref_200_400,long_400plus
 
-    return long_400plus, ref_50_100
-
-
+#LENGTH_LABELS = ["0-2", "3-19", "20-49", "50-99", "100-199", "200-399", "400+"]
 def compute_super_short_effect(df):
     '''Compute helpful rate for super short reviews (word_count < 3)
 
@@ -192,14 +200,14 @@ def compute_price_effect(df):
 
     if len(df_price) < 10:
         print("  WARNING: Too few rows with valid price data")
-        return np.nan
+        return np.nan,np.nan,np.nan
 
     df_price = df_price.copy()
     df_price["price_bucket"] = pd.qcut(df_price["price"], q=3, labels=["Low", "Mid", "High"])
 
     by_price = df_price.groupby("price_bucket", observed=False)["helpful_any"].mean()
 
-    return by_price.get("High", np.nan)
+    return by_price.get("Low", np.nan), by_price.get("Mid", np.nan), by_price.get("High", np.nan)
 
 
 # ─── Per-Category Pipeline ──────────────────────────────────────────────────────
@@ -224,19 +232,16 @@ def analyze_category(category):
     df = create_features(df)
 
     #Compute metrics
-    one_star, five_star = compute_extremity_bias(df)
-    print(f"  Extremity bias — 1-star: {one_star:.3f}, 5-star: {five_star:.3f}")
+    one_star,two_star,three_star,four_star, five_star = compute_extremity_bias(df)
+    print(f"  Extremity bias — 1-star: {one_star:.3f},2-star: {two_star:.3f},3-star: {three_star:.3f},4-star: {four_star:.3f} 5-star: {five_star:.3f}")
 
-    long_400plus, ref_50_100 = compute_length_effect(df)
+    ref_0_2,ref_3_20,ref_20_50,ref_50_100,ref_100_200,ref_200_400,long_400plus = compute_length_effect(df)
     print(f"  Length effect — 400+: {long_400plus:.3f}, 50-99 ref: {ref_50_100:.3f}")
-
-    super_short_rate = compute_super_short_effect(df)
-    print(f"  Super short effect: {super_short_rate:.3f}")
 
     verified, unverified, verified_delta = compute_verified_effect(df)
     print(f"  Verified effect — True: {verified:.3f}, False: {unverified:.3f}, Delta: {verified_delta:.3f}")
-
-    high_price = compute_price_effect(df)
+    
+    low_price,mid_price,high_price = compute_price_effect(df)
     print(f"  Price effect — High bucket: {high_price}")
 
     # Free memory
@@ -246,13 +251,23 @@ def analyze_category(category):
     return {
         "Category": category,
         "One_Star": round(one_star, 3) if pd.notna(one_star) else np.nan,
+        "Two_Star": round(two_star, 3) if pd.notna(two_star) else np.nan,
+        "Three_Star": round(three_star, 3) if pd.notna(three_star) else np.nan,
+        "Four_Star": round(four_star, 3) if pd.notna(four_star) else np.nan,
         "Five_Star": round(five_star, 3) if pd.notna(five_star) else np.nan,
-        "Long_400plus": round(long_400plus, 3) if pd.notna(long_400plus) else np.nan,
-        "Super_Short": round(super_short_rate, 3) if pd.notna(super_short_rate) else np.nan,
-        "Verified_Delta": round(verified_delta, 3) if pd.notna(verified_delta) else np.nan,
+        "0to2": round(ref_0_2, 3) if pd.notna(ref_0_2) else np.nan,
+        "3to19": round(ref_3_20, 3) if pd.notna(ref_3_20) else np.nan,
+        "20to49": round(ref_20_50, 3) if pd.notna(ref_20_50) else np.nan,
+        "50to99": round(ref_50_100, 3) if pd.notna(ref_50_100) else np.nan,
+        "100to199": round(ref_100_200, 3) if pd.notna(ref_100_200) else np.nan,
+        "200to399": round(ref_200_400, 3) if pd.notna(ref_200_400) else np.nan,
+        "400plus": round(long_400plus, 3) if pd.notna(long_400plus) else np.nan,
+        "Verified": round(verified, 3) if pd.notna(verified) else np.nan,
+        "Unverified":round(unverified, 3) if pd.notna(unverified) else np.nan,
+        "Low_Price": round(low_price, 3) if pd.notna(low_price) else np.nan,
+        "Mid_Price": round(mid_price, 3) if pd.notna(mid_price) else np.nan,
         "High_Price": round(high_price, 3) if pd.notna(high_price) else np.nan,
     }
-
 
 # ─── Main ───────────────────────────────────────────────────────────────────────
 
