@@ -217,14 +217,13 @@ def analyze_category(category):
     print(f"Processing: {category}")
     print(f"{'='*60}")
 
-    # Step 1: Load and merge
+    #Load and merge
     df = load_and_merge(category)
     print(f"  Rows loaded: {len(df)}")
 
-    # Step 2: Create features
     df = create_features(df)
 
-    # Step 3: Compute metrics
+    #Compute metrics
     one_star, five_star = compute_extremity_bias(df)
     print(f"  Extremity bias — 1-star: {one_star:.3f}, 5-star: {five_star:.3f}")
 
