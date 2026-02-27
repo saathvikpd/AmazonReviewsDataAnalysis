@@ -60,7 +60,7 @@ def process_reviews(input_meta_filename = False, metadata_fields_to_keep = ['par
 
 
 
-
+'''
 ### EXAMPLE 
 ### NEED THESE FILES TO RUN
 input_file_review = "All_Beauty.jsonl/All_Beauty.jsonl"
@@ -71,4 +71,4 @@ print(process_reviews(
     input_review_filename = input_file_review,
     input_meta_filename= input_file_meta,                      
     review_fields_to_keep= ['helpful_vote','timestamp','rating','images','text'] 
-).head(6))
+).head(6))'''
