@@ -42,4 +42,12 @@ def plot_reviews_over_time(category):
     ax = reviews90_monthly_agg.plot(x = "timestamp", y = ["num_reviews", "num_helpful_votes"], secondary_y = ["num_helpful_votes"], kind = "line", title = f"Reviews over time, Category: '{category}'")
     plt.savefig(f'plots/{category}.png')
 
-    return ax
+    # Extract data from the plot
+    line1 = ax.get_lines()[0]
+    line2 = ax.right_ax.get_lines()[0]
+    
+    time = line1.get_xdata()
+    num_reviews = line1.get_ydata()
+    helpful_votes = line2.get_ydata()
+
+    return time, num_reviews, helpful_votes
