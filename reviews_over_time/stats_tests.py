@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 import statsmodels.api as sm
 from statsmodels.tsa.stattools import grangercausalitytests
 
@@ -19,11 +20,11 @@ def compute_corr(time, num_reviews, helpful_votes, max_lag = 50, category = "All
     corr_data = results.items()
     corr_data = sorted(results.items(), key = lambda x: x[0])
 
-    plt.figure(0)
+    plt.figure()
     ax = plt.plot(list(map(lambda x: x[0], corr_data)), list(map(lambda x: x[1], corr_data)))
     plt.xlabel("Time Lag")
     plt.ylabel("Correlation")
-    plt.title("Correlation between num reviews & lagged helpful votes")
+    plt.title(f"Corr b/w num reviews & lagged helpful votes, Category: '{category}")
     plt.savefig(f"plots/corr_plot_{category}.png")
 
     peak_lag = -max(corr_data, key = lambda x: x[1])[0]
@@ -50,7 +51,7 @@ def compute_OLS(time, num_reviews, helpful_votes, lag = 1):
 
     return model
 
-def compute_granger(time, num_reviews, helpful_votes, num_lag = 1):
+def compute_granger(time, num_reviews, helpful_votes, num_lag = 1, category = "All_Beauty"):
 
     df = pd.DataFrame({
         "reviews": num_reviews,
@@ -60,9 +61,25 @@ def compute_granger(time, num_reviews, helpful_votes, num_lag = 1):
 
     data = df[["reviews", "helpful"]]
     
-    test_results = grangercausalitytests(data, maxlag = num_lag)
+    results = grangercausalitytests(data, maxlag = num_lag)
 
-    return test_results
+    p_values = []
+
+    for lag in range(1, num_lag + 1):
+        p_val = results[lag][0]['ssr_ftest'][1]
+        p_values.append(p_val)
+
+    lags = np.arange(1, num_lag + 1)
+
+    plt.figure()
+    plt.plot(lags, p_values, marker='o')
+    plt.axhline(0.05, linestyle='--')
+    plt.xlabel("Lag")
+    plt.ylabel("Granger causality p-val")
+    plt.title(f"Granger causality p-vals vs lag, Category: '{category}")
+    plt.savefig(f"plots/granger_{category}.png")
+
+    return results
 
 
 def run_tests(time, num_reviews, helpful_votes, category = "All_Beauty"):
@@ -81,5 +98,5 @@ def run_tests(time, num_reviews, helpful_votes, category = "All_Beauty"):
 
     print("Running Granger Causality test...")
 
-    test_results = compute_granger(time, num_reviews, helpful_votes, num_lag = peak_lag)
+    test_results = compute_granger(time, num_reviews, helpful_votes, num_lag = peak_lag, category = category)
     
