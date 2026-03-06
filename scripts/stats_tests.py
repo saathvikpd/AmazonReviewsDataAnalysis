@@ -25,8 +25,8 @@ def compute_corr(time, num_reviews, helpful_votes, max_lag = 50, category = "All
     plt.xlabel("Time Lag")
     plt.ylabel("Correlation")
     plt.title(f"Corr b/w num reviews & lagged helpful votes, Category: '{category}")
-    plt.savefig(os.path.join(PLOTS_PATH, f"plots/corr_plot_{category}.png"), dpi=600)
-    #plt.savefig(f"plots/corr_plot_{category}.png")
+    #plt.savefig(os.path.join(PLOTS_PATH, f"plots/corr_plot_{category}.png"), dpi=600)
+    plt.savefig(f"plots/corr_plot_{category}.png")
 
     peak_lag = -max(corr_data, key = lambda x: x[1])[0]
 
@@ -77,8 +77,8 @@ def compute_granger(time, num_reviews, helpful_votes, num_lag = 1, category = "A
     plt.xlabel("Lag")
     plt.ylabel("Granger causality p-val")
     plt.title(f"Granger causality p-vals vs lag, Category: '{category}")
-    plt.savefig(os.path.join(PLOTS_PATH, f"plots/granger_{category}.png"), dpi=600)
-    # plt.savefig(f"plots/granger_{category}.png")
+    #plt.savefig(os.path.join(PLOTS_PATH, f"plots/granger_{category}.png"), dpi=600)
+    plt.savefig(f"plots/granger_{category}.png")
 
     return results
 
