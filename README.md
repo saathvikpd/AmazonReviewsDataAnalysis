@@ -16,9 +16,7 @@ This dataset contains reviews grouped into many item categories (appliances, aut
 ```text
 G:\AmazonReviewsDataAnalysis/           # coded in as {BASE_PATH}
 ├── csv/                                # Processed datasets for plotting
-│   ├── helpfulness_summary.csv
-│   ├── image_helpfulness_final_summary.csv
-│   └── plot_ready_img_help.csv
+│   └── helpfulness_summary.csv
 │
 ├── meta_categories/                    # Product metadata (Git-ignored)
 │   └── meta_[Category].jsonl
