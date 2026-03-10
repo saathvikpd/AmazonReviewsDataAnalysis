@@ -36,3 +36,9 @@ G:\AmazonReviewsDataAnalysis/           # coded in as {BASE_PATH}
 ```
 
 3) Run final_notebook.ipynb after connecting to a runtime
+
+## Libraries Used
+1. Pandas/Numpy
+2. Seaborn
+3. Matplotlib
+4. Statsmodels
