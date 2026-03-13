@@ -4,7 +4,11 @@ from .dataset_filter import process_reviews
 
 
 def plot_reviews_over_time(category):
-
+    '''
+    Input: Input string for the category you are looking to plot reviews over time
+    Output: Will create and save figures that display the number of helpful reviews over time span on the review data collected
+    
+    '''
     input_file_review = f"review_categories/{category}.jsonl"
     input_file_meta = f"meta_categories/meta_{category}.jsonl"
 

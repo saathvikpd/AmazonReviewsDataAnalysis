@@ -5,7 +5,11 @@ import statsmodels.api as sm
 from statsmodels.tsa.stattools import grangercausalitytests
 
 def compute_corr(time, num_reviews, helpful_votes, max_lag = 50, category = "All_Beauty"):
-
+    '''
+    Computes correation test
+    Input: Number of reviews, helpful votes , maximum lag, and category 
+    Output: Saves a figure of the test long with the peak lag 
+    '''
     df = pd.DataFrame({
         "reviews": num_reviews,
         "helpful": helpful_votes
@@ -34,7 +38,10 @@ def compute_corr(time, num_reviews, helpful_votes, max_lag = 50, category = "All
 
 
 def compute_OLS(time, num_reviews, helpful_votes, lag = 1):
-
+    '''
+    Input: Number of reviews, helpful votes, and lag
+    Computes OLS test
+    '''
     df = pd.DataFrame({
         "reviews": num_reviews,
         "helpful": helpful_votes
@@ -53,7 +60,11 @@ def compute_OLS(time, num_reviews, helpful_votes, lag = 1):
     return model
 
 def compute_granger(time, num_reviews, helpful_votes, num_lag = 1, category = "All_Beauty"):
-
+    '''
+    Computes Granger Causality test
+    Input: Number of reviews, helpful votes , lag, and category 
+    Output: Saves a figure of the test long with the results of the test
+    '''
     df = pd.DataFrame({
         "reviews": num_reviews,
         "helpful": helpful_votes
@@ -84,7 +95,12 @@ def compute_granger(time, num_reviews, helpful_votes, num_lag = 1, category = "A
 
 
 def run_tests(time, num_reviews, helpful_votes, category = "All_Beauty"):
-
+    '''
+    Function is to run all of the statistical analysis which include correlation, OLS, and Granger Causality tests
+    Input: Time, the number of reviews, integer of helpful reviews, string of category to analyze.
+    Output: Table print with the results for given category to compute tests on.
+    
+    '''
     print("Generating correlation plot...")
 
     plot, peak_lag = compute_corr(time, num_reviews, helpful_votes, category = category)

@@ -1,5 +1,10 @@
 # Amazon Reviews Data Analysis
-Group 19 ECE 143 Project
+### Group 19 ECE 143 Project
+
+#### Objective: 
+1) Question: What quantifiable metrics contribute to a helpful review?
+2) Help buyers sift through reviews to be better informed
+3) Question: For sellers, how can helpful reviews benefit the product?
 
 ## Dataset
 Amazon review dataset collected by UCSD McAuley lab: ([Amazon review dataset](https://amazon-reviews-2023.github.io/))
@@ -35,10 +40,12 @@ G:\AmazonReviewsDataAnalysis/           # coded in as {BASE_PATH}
 └── final_notebook.ipynb                # Main consolidated project .ipynb
 ```
 
-3) Run final_notebook.ipynb after connecting to a runtime
+3) Run final_notebook.ipynb after connecting to a runtime. This file will have the necessary functions to run the filtering and statsitical testing used to generate all figures for this project.
 
 ## Libraries Used
-1. Pandas/Numpy
-2. Seaborn
-3. Matplotlib
-4. Statsmodels
+1. Pandas
+2. Numpy
+3. Seaborn
+4. Matplotlib
+5. Statsmodels
+6. json
